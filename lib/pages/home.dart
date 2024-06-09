@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
     Map data = jsonDecode(response.body);
     Map temp_main = data['main'];
     String temp = temp_main['temp'];
-    print(temp);
+
   }
 
   @override
