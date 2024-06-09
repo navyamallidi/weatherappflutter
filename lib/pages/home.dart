@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,16 +12,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
+  void  getData() async
+  {
+    http.Response response = await http.get(Uri.parse("api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=2cc5d421027e80fa33bc888680b6eb63"));
+    Map data = jsonDecode(response.body);
+    Map temp_main = data['main'];
+    String temp = temp_main['temp'];
+    print(temp);
+  }
+
   @override
   void initState() {
     super.initState();
     getData();
-  }
-
-  void getData() async
-  {
-    http.Response response = await http.get(Uri.parse("https://localhost/3000"));
-    print(response.body);
   }
   @override
   Widget build(BuildContext context) {
