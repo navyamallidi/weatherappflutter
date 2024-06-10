@@ -14,11 +14,11 @@ class _HomeState extends State<Home> {
 
   void  getData() async
   {
-    http.Response response = await http.get(Uri.parse("api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=2cc5d421027e80fa33bc888680b6eb63"));
+    http.Response response = await http.get(Uri.parse(""));
     Map data = jsonDecode(response.body);
     Map temp_main = data['main'];
     String temp = temp_main['temp'];
-
+    print(temp);
   }
 
   @override
