@@ -1,46 +1,42 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class worker {
+class Worker {
   String location;
 
-  worker({required this.location});
+  // Initialize the fields with default values
+  String temp = "";
+  String humidity = "";
+  String air_speed = "";
+  String description = "";
+  String main = "";
 
-  String temp = '';
-  String humidity = '';
-  String airSpeed = '';
-  String description = '';
-  String main = '';
+  Worker({required this.location});
 
   Future<void> getData() async {
     try {
-      final response = await http.get(Uri.parse(
-          "https://api.openweathermap.org/data/2.5/weather?q=$location,key"));
+      final response = await http.get(
+          Uri.parse("http://api.openweathermap.org/data/2.5/weather?q=$location&appid="));
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
+        Map data = jsonDecode(response.body);
 
-        List<dynamic> weatherData = data['weather'];
-        Map<String, dynamic> weatherMainData = weatherData[0];
-        String getMainDes = weatherMainData['main'];
-        String getDesc = weatherMainData['description'];
+        Map temp_data = data['main'];
+        humidity = temp_data['humidity'].toString();
+        temp = (temp_data['temp'] - 273.15).toStringAsFixed(2); // Convert from Kelvin to Celsius
 
-        Map<String, dynamic> tempData = data['main'];
-        Map<String, dynamic> wind = data['wind'];
-        double getAirSpeed = wind["speed"];
-        int getHumidity = tempData["humidity"];
-        double getTemp = tempData['temp'] - 273.15; // Convert from Kelvin to Celsius
+        Map wind = data['wind'];
+        air_speed = wind["speed"].toString();
 
-        temp = getTemp.toStringAsFixed(2);
-        humidity = getHumidity.toString();
-        airSpeed = getAirSpeed.toString();
-        description = getDesc;
-        main = getMainDes;
+        List weather_data = data['weather'];
+        Map weather_main_data = weather_data[0];
+        main = weather_main_data['main'];
+        description = weather_main_data["description"];
       } else {
-        print('Failed to load weather data. Status code: ${response.statusCode}');
+        print("Failed to load weather data");
       }
     } catch (e) {
-      print('Error: $e');
+      print("Error occurred: $e");
     }
   }
 }
